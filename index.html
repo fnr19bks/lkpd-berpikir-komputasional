@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LKPD Berpikir Komputasional — Kelas 8 SMPN 19 Kota Bekasi</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- ===== TOP BAR ===== -->
+  <header id="topbar" class="topbar hidden">
+    <div class="progress-info">
+      <span id="levelLabel">Level 1 dari 5</span>
+      <div class="progress-bar"><div id="progressFill" style="width:0%"></div></div>
+    </div>
+    <div class="top-controls">
+      <span id="timerDisplay" class="timer-display">🧘 Latihan</span>
+      <button id="btnToggleArti" class="icon-btn" title="Tampilkan/Sembunyikan arti">🇮🇩</button>
+      <button id="btnMute" class="icon-btn" title="Suara ON/OFF">🔊</button>
+    </div>
+  </header>
+
+  <!-- ===== SCREEN 0: WELCOME ===== -->
+  <section id="screen-welcome" class="screen active">
+    <div class="card card-welcome">
+      <h1 class="title">🧠 LKPD Interaktif — Berpikir Komputasional</h1>
+      <p class="subtitle">"Pecahkan Masalah Besar dengan Cara Kecil!"</p>
+      <p class="subtitle-en">"Break Big Problems into Small Steps!"</p>
+
+      <label for="inputNama" class="label">Nama Siswa / Student Name:</label>
+      <input id="inputNama" type="text" maxlength="100" placeholder="Tulis nama lengkapmu..." class="input">
+
+      <div class="mode-select">
+        <p class="label">Pilih Mode Belajar / Choose Study Mode:</p>
+        <div class="mode-options">
+          <button class="mode-btn active" data-mode="latihan">
+            🧘 Mode Latihan<br><small>Practice — Tanpa Timer</small>
+          </button>
+          <button class="mode-btn" data-mode="tantangan">
+            ⚡ Mode Tantangan<br><small>Challenge — 90s per Level</small>
+          </button>
+        </div>
+      </div>
+
+      <div class="mode-select">
+        <p class="label">Pilih Alur / Choose Flow:</p>
+        <div class="mode-options">
+          <button class="flow-btn active" data-flow="adventure">
+            🎯 Petualangan<br><small>Adventure — urut</small>
+          </button>
+          <button class="flow-btn" data-flow="free">
+            🎲 Bebas<br><small>Free — pilih level</small>
+          </button>
+        </div>
+      </div>
+
+      <button id="btnStart" class="btn btn-primary btn-large">▶ Mulai Bermain / Start Game</button>
+      <button id="btnHelp" class="btn btn-ghost">📖 Cara Bermain / How to Play</button>
+      <button id="btnTeacher" class="btn btn-ghost">👩‍🏫 Mode Guru / Teacher Mode</button>
+
+      <footer class="footer-note">Informatika Kelas 8 SMPN 19 Kota Bekasi • Computational Thinking • Gratis</footer>
+    </div>
+  </section>
+
+  <!-- ===== SCREEN 1-5: LEVEL ===== -->
+  <section id="screen-level" class="screen">
+    <div id="levelContent" class="level-content"></div>
+    <div id="levelNav" class="level-nav"></div>
+  </section>
+
+  <!-- ===== SCREEN 6: RESULT ===== -->
+  <section id="screen-result" class="screen">
+    <div class="card">
+      <h2 class="title">🎉 Hasil Akhir / Final Result</h2>
+      <div id="resultBody" class="result-body"></div>
+      <div class="result-actions">
+        <button id="btnPlayAgain" class="btn btn-primary">🔁 Main Lagi / Play Again</button>
+        <button id="btnRetryWrong" class="btn btn-warning">🎯 Ulangi Level yang Salah</button>
+        <button id="btnDownload" class="btn btn-info">📥 Download Hasil / Save Result</button>
+        <button id="btnShowLeaderboard" class="btn btn-ghost">🏆 Leaderboard Lokal</button>
+      </div>
+      <div class="reflection">
+        <label for="inputRefleksi" class="label">✍️ Refleksi (opsional) — apa yang kamu pelajari hari ini?</label>
+        <textarea id="inputRefleksi" rows="3" placeholder="Tulis refleksimu di sini..."></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SCREEN 7: LEADERBOARD ===== -->
+  <section id="screen-leaderboard" class="screen">
+    <div class="card">
+      <h2 class="title">🏆 Leaderboard Lokal</h2>
+      <p class="subtitle-en">Top 5 skor di browser ini</p>
+      <ol id="leaderboardList" class="leaderboard-list"></ol>
+      <button id="btnCloseLeaderboard" class="btn btn-primary">⬅ Kembali / Back</button>
+    </div>
+  </section>
+
+  <!-- ===== SCREEN 8: TEACHER MODE ===== -->
+  <section id="screen-teacher" class="screen">
+    <div class="card">
+      <h2 class="title">👩‍🏫 Mode Guru / Teacher Mode</h2>
+      <p class="subtitle-en">Buat soal sendiri, simpan di browser, dan bagikan lewat URL.</p>
+
+      <div class="teacher-info">
+        <b>📖 Format JSON:</b> Tempel JSON di bawah. Boleh hanya mengisi level tertentu — level lain pakai default. Klik "Muat Contoh" untuk melihat format.
+      </div>
+
+      <textarea id="teacherJSON" rows="12" class="input" placeholder='{
+  "level1": [
+    { "term": "Decomposition", "def": "Memecah masalah besar" }
+  ],
+  "level2": [
+    { "scenario": "...", "question": "...", "options": ["A","B","C","D"], "answer": 0, "explanation": "..." }
+  ],
+  "level3": [
+    { "title": "Judul", "steps": ["Langkah 1","Langkah 2","Langkah 3","Langkah 4","Langkah 5"] }
+  ],
+  "level4": [
+    { "steps": ["...","...","...","...","..."], "correct": "Judul Benar", "distractors": ["X","Y","Z"] }
+  ],
+  "level5": {
+    "pattern": [ {"slot":1,"answer":"kumpulkan","en":"gather"}, ... ],
+    "wordBank": ["kumpulkan","pilah/bagi","kerjakan bertahap","periksa","selesaikan","abaikan"]
+  }
+}'></textarea>
+
+      <div class="teacher-actions">
+        <button id="btnTeacherSample" class="btn btn-ghost">📄 Muat Contoh / Load Sample</button>
+        <button id="btnTeacherValidate" class="btn btn-info">🔍 Validasi / Validate</button>
+        <button id="btnTeacherSave" class="btn btn-primary">💾 Simpan Lokal / Save Local</button>
+        <button id="btnTeacherShare" class="btn btn-warning">🔗 Generate URL Share</button>
+        <button id="btnTeacherClear" class="btn btn-danger">🗑 Hapus Soal Kustom / Clear Custom</button>
+      </div>
+
+      <div id="teacherStatus" class="teacher-status"></div>
+
+      <div id="shareBox" class="share-box hidden">
+        <label class="label">🔗 URL Share (kirim ke siswa):</label>
+        <div class="share-url-row">
+          <input id="shareURL" type="text" readonly class="input">
+          <button id="btnCopyShare" class="btn btn-primary">📋 Copy</button>
+        </div>
+        <p class="subtitle-en">Siswa membuka URL ini → otomatis memuat soal gurumu.</p>
+      </div>
+
+      <button id="btnCloseTeacher" class="btn btn-ghost" style="margin-top:16px;">⬅ Kembali ke Beranda / Back Home</button>
+    </div>
+  </section>
+
+  <!-- ===== SCREEN 9: FREE MODE SELECT ===== -->
+  <section id="screen-free" class="screen">
+    <div class="card">
+      <h2 class="title">🎲 Mode Bebas / Free Mode</h2>
+      <p class="subtitle-en">Pilih level yang ingin dimainkan:</p>
+      <div class="free-level-list">
+        <button class="btn btn-primary" data-freelvl="0">Level 1 — Kenali 4 Keterampilan</button>
+        <button class="btn btn-primary" data-freelvl="1">Level 2 — 4 Pertanyaan Analisis</button>
+        <button class="btn btn-primary" data-freelvl="2">Level 3 — Susun Dekomposisi</button>
+        <button class="btn btn-primary" data-freelvl="3">Level 4 — Tebak Masalah</button>
+        <button class="btn btn-primary" data-freelvl="4">Level 5 — Pola Dekomposisi</button>
+      </div>
+      <button id="btnCloseFree" class="btn btn-ghost" style="margin-top:16px;">⬅ Kembali / Back</button>
+    </div>
+  </section>
+
+</div>
+
+<!-- ===== MODAL: How to Play ===== -->
+<div id="modalHelp" class="modal hidden">
+  <div class="modal-box">
+    <h3>📖 Cara Bermain / How to Play</h3>
+    <ol class="help-list">
+      <li>Masukkan namamu, pilih mode latihan atau tantangan.</li>
+      <li>Selesaikan 5 level: kenali istilah, jawab analisis, susun langkah, tebak masalah, temukan pola.</li>
+      <li>Mode Tantangan punya timer 90 detik per level — sisa waktu >30s dapat bonus +2!</li>
+      <li>Hasil bisa diunduh dan dikumpulkan ke guru.</li>
+    </ol>
+    <button id="btnCloseHelp" class="btn btn-primary">Mengerti / Got it</button>
+  </div>
+</div>
+
+<!-- ===== MODAL: Feedback ===== -->
+<div id="modalFeedback" class="modal hidden">
+  <div class="modal-box">
+    <div id="feedbackIcon" class="feedback-icon">✅</div>
+    <h3 id="feedbackTitle">Benar!</h3>
+    <p id="feedbackText" class="feedback-text"></p>
+    <button id="btnCloseFeedback" class="btn btn-primary">Lanjut / Next</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
