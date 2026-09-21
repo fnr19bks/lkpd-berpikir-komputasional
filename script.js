@@ -1041,13 +1041,75 @@ $("#btnShowLeaderboard").addEventListener("click", () => {
 });
 $("#btnCloseLeaderboard").addEventListener("click", () => showScreen("screen-result"));
 
-// ============ TEACHER MODE ============
+// ============ TEACHER MODE (dengan sandi) ============
+const TEACHER_PASSWORD = "1919";  // ⚙️ [TUNABLE] ganti sandi di sini
+const TEACHER_AUTH_KEY = "lkpd_teacher_authed";
+
+// Handler tombol Mode Guru
 $("#btnTeacher").addEventListener("click", () => {
+  // Jika sudah login di sesi browser ini, langsung masuk
+  if (sessionStorage.getItem(TEACHER_AUTH_KEY) === "yes") {
+    openTeacherScreen();
+    return;
+  }
+  // Tampilkan modal password
+  $("#inputPassword").value = "";
+  $("#passwordError").style.display = "none";
+  showModal("modalPassword");
+  setTimeout(() => $("#inputPassword").focus(), 100);
+});
+
+// Fungsi coba login
+function tryTeacherLogin() {
+  const input = $("#inputPassword").value.trim();
+  if (input === TEACHER_PASSWORD) {
+    // Sukses
+    sessionStorage.setItem(TEACHER_AUTH_KEY, "yes");
+    hideModal("modalPassword");
+    openTeacherScreen();
+    soundCorrect();
+  } else {
+    // Gagal
+    $("#passwordError").style.display = "block";
+    $("#inputPassword").value = "";
+    $("#inputPassword").focus();
+    soundWrong();
+    // Animasi getar
+    const box = document.querySelector("#modalPassword .modal-box");
+    box.style.animation = "none";
+    void box.offsetWidth; // trigger reflow
+    box.style.animation = "popIn 250ms ease, shake 400ms";
+  }
+}
+
+// Fungsi buka layar guru
+function openTeacherScreen() {
   const saved = localStorage.getItem(CUSTOM_KEY);
   if (saved) $("#teacherJSON").value = saved;
   showScreen("screen-teacher");
+}
+
+// Tombol Submit
+$("#btnSubmitPassword").addEventListener("click", tryTeacherLogin);
+
+// Tombol Batal
+$("#btnCancelPassword").addEventListener("click", () => {
+  hideModal("modalPassword");
+  $("#inputPassword").value = "";
+  $("#passwordError").style.display = "none";
 });
+
+// Tekan Enter di input password = submit
+$("#inputPassword").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    tryTeacherLogin();
+  }
+});
+
+// Tombol keluar dari layar guru → hapus sesi login
 $("#btnCloseTeacher").addEventListener("click", () => {
+  sessionStorage.removeItem(TEACHER_AUTH_KEY);  // logout
   showScreen("screen-welcome");
   $("#topbar").classList.add("hidden");
 });
