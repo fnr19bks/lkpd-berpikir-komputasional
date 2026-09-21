@@ -192,6 +192,24 @@
   </div>
 </div>
 
+<!-- ===== MODAL: Password Guru ===== -->
+<div id="modalPassword" class="modal hidden">
+  <div class="modal-box">
+    <div class="feedback-icon">🔐</div>
+    <h3>Akses Terbatas / Restricted Access</h3>
+    <p class="feedback-text">
+      Masukkan sandi guru untuk membuka Mode Guru.<br>
+      <i>Enter teacher password to access Teacher Mode.</i>
+    </p>
+    <input id="inputPassword" type="password" class="input" placeholder="Sandi guru..." maxlength="20" autocomplete="off" inputmode="numeric">
+    <p id="passwordError" style="color:var(--danger);font-size:13px;margin-top:8px;display:none;font-weight:600;">❌ Sandi salah! Coba lagi.</p>
+    <div style="display:flex;gap:8px;margin-top:16px;">
+      <button id="btnCancelPassword" class="btn btn-ghost" style="margin-top:0;">Batal / Cancel</button>
+      <button id="btnSubmitPassword" class="btn btn-primary" style="margin-top:0;">Masuk / Enter</button>
+    </div>
+  </div>
+</div>
+  
 <script src="script.js"></script>
 </body>
 </html>
