@@ -1042,7 +1042,7 @@ $("#btnShowLeaderboard").addEventListener("click", () => {
 $("#btnCloseLeaderboard").addEventListener("click", () => showScreen("screen-result"));
 
 // ============ TEACHER MODE (dengan sandi) ============
-const TEACHER_PASSWORD = "1919";  // ⚙️ [TUNABLE] ganti sandi di sini
+const TEACHER_PASSWORD = atob("MTkxOQ==");  // ⚙️ [TUNABLE] ganti sandi di sini
 const TEACHER_AUTH_KEY = "lkpd_teacher_authed";
 
 // Handler tombol Mode Guru
